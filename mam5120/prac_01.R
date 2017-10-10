@@ -62,3 +62,11 @@ plot(Volume,treeFormula, main="Calculated volume against measured volume for 31 
 detach(Trees) 
 
 ######################## Iris exercise
+
+attach(iris)
+summary(iris$Sepal.Length)
+plot(Sepal.Width, Sepal.Length, abline(lm(Sepal.Length ~ Sepal.Width)), col=rgb(0,100,0,50,maxColorValue=255), pch=19, cex=1.3)
+# abline adds regression, colours idk?; pch makes solid, cex makes bigger
+boxplot(Sepal.Width~Species,notch=TRUE)
+# if notch TRUE a notch is drawn in side of boxes, if notches of two plots don't overlap is ‘strong evidence’ that two medians differ 
+detach(iris)
