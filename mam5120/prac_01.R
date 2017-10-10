@@ -33,14 +33,32 @@ boxplot(whales, w_len, w_ages, main="num, length, and ages", ylab="count", col.m
 
 hist(w_ages)
 
+######
+
+x <- c(1,3,5,8,12)
+y <- seq(3,27,by=3)
+abs(length(x) - length(y))
+boxplot(x,y)
+
 #########################
+######################### function
 
 function1 <- function(arg1,arg2) {
   out <- arg1 * arg2
   return(out)
 }
 
-x <- c(1,3,5,8,12)
-y <- seq(3,27,by=3)
-abs(length(x) - length(y))
-boxplot(x,y)
+######################## Trees exercise
+
+# import dataset Trees
+attach(Trees) # to avoid excessive use of $
+summary(Volume)
+#summary(log(Trees$Volume)) # if no attachment
+boxplot(Volume,Diameter,Height)
+plot(Diameter,Volume)
+##
+treeFormula <- pi*((Diameter/24)^2)*Height #surface area
+plot(Volume,treeFormula, main="Calculated volume against measured volume for 31 trees", ylab="Surface Area")
+detach(Trees) 
+
+######################## Iris exercise
