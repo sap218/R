@@ -1,4 +1,4 @@
-#sap21 - wednesday 11th october @ 08:58
+# sap21 _ MAM5120 _ week 2 practical
 
 dbinom(2,10,1/6) # probability of rolling 2 sixes when dice rolled 10 times
 pbinom(4,20,0.5, lower.tail=FALSE) # chance of getting 4 of fewer heads in 20 tosses P(X<=4)
@@ -12,7 +12,8 @@ x <- seq(0,25,1)
 plot(dbinom(x,25,0.5),type="h") # type h makes makes not plots
 plot(ppois(x,40),type="s") # type s makes line graph
 
-#############################################
+###################################
+###################################
 
 attach(iris)
 
@@ -50,7 +51,7 @@ ylim<-range(iris$Petal.Length)
 par(mfrow=c(1,3)) 
 with(subset(iris,Species=="setosa"),
      {
-      plot(Petal.Width,Petal.Length,xlim=xlim,ylim=ylim,col=1,main="setosa") 
+       plot(Petal.Width,Petal.Length,xlim=xlim,ylim=ylim,col=1,main="setosa") 
      })
 with(subset(iris,Species=="versicolor"),
      {
@@ -74,8 +75,6 @@ with(iris, {
 })
 
 ###################################
-###################################
-###################################
 
 #data(malaria/tartar/etc)
 
@@ -90,3 +89,18 @@ with(malaria,
 
 tarplot <- ggplot(tartar, aes(x=treat,y=index))+geom_boxplot()
 chickplot <- ggplot(chickwts,aes(x=feed,y=weight))+geom_point(shape=2,size=3,colour="red")
+
+###################################
+################################### EXERCISES
+###################################
+
+#exercise 1
+attach(dogwhelks)
+plot1 <- ggplot(dogwhelks, aes(x=Width,y=Length))+geom_point()
+plot2 <- ggplot(dogwhelks, aes(x=Width,y=Weight))+geom_point()
+plot3 <- ggplot(dogwhelks, aes(x=Location,y=Length))+geom_point()
+plot4 <- ggplot(dogwhelks, aes(x=Colour,y=Weight))+geom_point()
+
+#exercise 2
+plot(dbinom(x,100,0.1))
+plot(ppois(x,10))
