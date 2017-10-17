@@ -102,5 +102,29 @@ plot3 <- ggplot(dogwhelks, aes(x=Location,y=Length))+geom_point()
 plot4 <- ggplot(dogwhelks, aes(x=Colour,y=Weight))+geom_point()
 
 #exercise 2
-plot(dbinom(x,100,0.1))
-plot(ppois(x,10))
+#(a)
+par(mfrow=c(1,1)) 
+d <- dbinom(x,100,0.1)
+p <- ppois(x,10)
+plot(d,type="l",col="red")
+#par(new=TRUE) #may or may not be needed?
+lines(p,col="green")
+
+# par(mfrow=c(1,2)) make both side by side
+# plot(dbinom(x,100,0.1), col="red")
+# plot(ppois(x,10), col="green")
+
+#(b)
+#--
+
+#exercise 3
+#(a)
+par(mfrow=c(1,1)) 
+numheads <- c(0, 1, 2, 3, 4, 5, 6, 7, 8)
+freq <- c(3, 5, 11, 11, 6, 3, 1, 0, 0)
+hist(numheads,freq,ylim=c(0,0.5))
+
+df <- data.frame(numheads = c(0, 1, 2, 3, 4, 5, 6, 7, 8),
+                 freq = c(3, 5, 11, 11, 6, 3, 1, 0, 0))
+hist(df$numheads,freq)
+with(df, hist(freq))
