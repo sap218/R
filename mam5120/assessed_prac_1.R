@@ -32,6 +32,7 @@ x - zval*(sd/sqrt(N))
 x + zval*(sd/sqrt(N))
 
 #################
+#################
 # Question 3
 N = 37
 x = 7.42
@@ -61,8 +62,7 @@ x + zval*(se/sqrt(N))
 z <- (x - 7.7)/(se/sqrt(N))
 p <- 2*pnorm(z)
 
-# VII
-
+#################
 #################
 # Question 4
 irish <- 120
