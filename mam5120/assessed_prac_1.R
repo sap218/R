@@ -1,29 +1,6 @@
 # sap21 _ MAM5120 _ Assessed Practical 1 _ 1st November 2017
 
-# Question 1
-# length of leg bones in chimpanzees - standard deviation is sqrt(variance)
-m = 28 # average normal distribution
-v = 16 # variance
-# I - probability > 31.5cm
-pnorm(31.5, mean = m, sd = sqrt(v), lower.tail = FALSE)
-# II - probability < 26.1cm
-pnorm(26.1, mean = m, sd = sqrt(v), lower.tail = TRUE)
-# III - probability between 25 and 34
-pnorm(25, 34, mean = 28, sd = (16/sqrt(100)))
-pnorm(25, 34, mean = 28, sd = 4)
-# IV - sample size N=15, find distribution of sample mean
-N <- 15
-pnorm(N,m,(v/sqrt(N))) 
-# V - prob sample mean w/ N < 27cm
-N <- 27
-pnorm(N, mean = m, sd = sqrt(v), lower.tail = TRUE)
-# VI - what is D, such prob sample mean is 15 is less than D is 95%
-N <- 15
-D <- m * v
-
 #################
-#################
-
 # Question 2
 # wingspan of adult robins
 N <- 38 # sample population of birds
@@ -34,7 +11,6 @@ s <- 4.1^2 # variance
 sigma <- 4.1^2 # true population variance using z-test
 sd <- sqrt(sigma)
 zval <- 1.96 # 95%
-
 x - zval*(sd/sqrt(N))
 x + zval*(sd/sqrt(N))
 
@@ -55,8 +31,7 @@ zval <- 2.59 # 99 %
 x - zval*(sd/sqrt(N))
 x + zval*(sd/sqrt(N))
 
-###############
-
+#################
 # Question 3
 N = 37
 x = 7.42
@@ -70,6 +45,7 @@ se <- sqrt(S)
 # III
 x - qt(0.975, (N-1))
 x + qt(0.975, (N-1))
+
 # IV 
 x - qt(0.995, (N-1))
 x + qt(0.995, (N-1))
@@ -87,12 +63,12 @@ p <- 2*pnorm(z)
 
 # VII
 
-###############
-
+#################
 # Question 4
 irish <- 120
 scottish <- 130
 # I = X~Bin(120,p)
+
 # II
 # H0: p = 0.57
 # Ha: p > 0.57
