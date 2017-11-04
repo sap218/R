@@ -51,3 +51,28 @@ z <- (x - 10.7)/(sd/sqrt(N))
 p <- 2*pnorm(z)
 
 # IV
+
+###############
+###############
+###############
+
+# Question 3
+N = 37
+x = 7.42
+S = 0.49^2
+
+# I - standard error
+se <- sqrt(S)
+
+# II - distribution is t-test
+
+# III
+x - zval*(sqrt(S)/sqrt(N))
+x + zval*(sqrt(S)/sqrt(N))
+
+
+
+
+
+
+
