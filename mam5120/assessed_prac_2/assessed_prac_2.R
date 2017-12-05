@@ -1,27 +1,58 @@
 # sap21 _ MAM5120 _ Assessed Practical 2 _ 6th November 2017
 
-#################
-#Question 1
-#relationship between height (cm) & weight (kg) - 100 people
+#Question 1 - relationship between height (cm) & weight (kg) - 100 people
 
 #a - produce plot
+library(readr)
+weight_height <- read_csv("~/git/R/R/mam5120/assessed_prac_2/weight_height.csv")
+#View(weight_height)
 attach(weight_height)
-plot(height, weight, main="Scatter Plot of Weight against Height", ylab="Weight (kg)", xlab="Height (cm)")
+plot(height, weight, main="Scatter Plot of Weight against Height of 100 People", ylab="Weight (kg)", xlab="Height (cm)")
 
 #b - linear model to regress y on x
 #reproduce & interpret summary table of linear model in R
+abline(lm(weight~height), col="red") #regression line (y~x) 
 #including the equation of the fitted line and proportion of variability explained by model
-hw.lm <-lm(height~weight) 
+hw.lm <-lm(weight~height) 
 summary(hw.lm)
-abline(lm(weight~height), col="red") # regression line (y~x) 
+a <- -45.73068
+b <- 0.67113
+equation <- "y <- a + (b*x)"
+ans <- "y <- -45.73068 + 0.67113(x)"
 
 #c - what is meaning of Estimate in row labeled "height" in table of (b)
+ans <- "slope of the graph"
 
-#################
-#Question 2
+###################################################
+#Question 2 - effect of changes in pH on efficiency of an industrial process
+ph <- c(5.3, 8.0, 6.0, 6.2, 6.7, 7.4, 7.7, 7.5, 6.6, 5.1, 7.0, 7.7)
+eff <- c(30.2, 59, 37.3, 38, 42, 52, 56.3, 55.4, 43.3, 27.8, 44.8, 55.1)
 
-#################
+#a - best fitting models
+pe.lm <- lm(eff~ph)
+summary(pe.lm)
+m1.r2 <- 0.9808
+model1 <- "y <- -28.3889 + 10.8604(x)"
+pe.lm2 <- lm(eff~ph+(I(ph^2)))
+summary(pe.lm2)
+m2.r2 <- 0.987
+model2 <- "y <- 16.0767 - 2.9898(x) + 1.0562(x)"
+ans <- "model 2 better fit as R-squared is higher"
+
+#b - proportion of variability is explained by each model
+summary(pe.lm)
+m1.r2 <- 0.9808
+m2.r2adj <- 0.9789
+summary(pe.lm2)
+m2.r2 <- 0.987
+m2.r2adj <- 0.9841
+
+#c - anova on model 2: whether inclusion of quadratic term significantly improves the fit of the model
+#be explicit about exactly which null hypothesis the F-test is testing
+anova(lm(eff~ph)) #summary(aov(pe.lm))
+
+###################################################
 #Question 3
 
-#################
+###################################################
 #Question 4
