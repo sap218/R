@@ -1,11 +1,8 @@
-# sap21 _ MAM5120 _ Assessed Practical 2 _ 6th November 2017
+# sap21 _ MAM5120 _ Assessed Practical 2 _ 6th December 2017
 
 #Question 1 - relationship between height (cm) & weight (kg) - 100 people
-
 #a - produce plot
-#library(readr)
 weight_height <- read.csv("~/git/R/R/mam5120/assessed_prac_2/weight_height.csv")
-#View(weight_height)
 attach(weight_height)
 plot(height, weight, main="Scatter Plot of Weight against Height of 100 People", ylab="Weight (kg)", xlab="Height (cm)")
 
@@ -53,7 +50,6 @@ ans2c <- "no need to reject null hypothesis as p-value (at 10%) is higher than 5
 ###################################################
 #Question 3
 Question3_Week9 <- read.csv("~/git/R/R/mam5120/assessed_prac_2/Question3_Week9.csv")
-#View(Question3_Week9)
 attach(Question3_Week9)
 A.df <- read.csv("Question3_Week9.csv")
 
@@ -79,9 +75,34 @@ ans3d <- "each time x is increased by 1, y is multiplied by e(^^bx)"
 #b
 
 #c - fit linear model regressing call rate (y) on temp (x)
-BirdCalls <- read.csv("BirdCalls.csv")
+BirdCalls <- read.csv("~/git/R/R/mam5120/assessed_prac_2/BirdCalls.csv")
 plot(BirdCalls$Temp, BirdCalls$CallRate)
-
+abline(lm(BirdCalls$CallRate~BirdCalls$Temp), col="red")
 bc.lm <- lm(CallRate~Temp, data = BirdCalls)
 summary(bc.lm)
-plot(bc.lm)
+
+#d - plot data with different colours and symbols
+plot(CallRate~Temp, data = BirdCalls, pch=Species, col=Species+3)
+abline(lm(BirdCalls$CallRate~BirdCalls$Temp), col="red")
+
+#e - fit model to regress CallRate on both Temp and Species w/ no interaction
+#focus on the interpretation of the parameter estimate for species in table
+bc.lm2 <- lm(CallRate~Temp+Species, data = BirdCalls)
+summary(bc.lm2)
+plot(bc.lm2)
+ans4e <- "species estimate is quite high"
+
+#f - fit model w/ interaction and report findings from table
+BirdCalls3.lm <- lm(CallRate~Temp*Species, data = BirdCalls)
+summary(BirdCalls3.lm)
+ans4f <- "p-value for Temp:Species is 0.364: R-squared is 0.9966 with adjusted R-squared being 0.9965"
+
+#g - using anova to compare models: find residual sum of squares
+anova(BirdCalls3.lm, bc.lm2)
+rs.m2 <- c(-2.62449, -0.48942, -0.03041,  0.54017,  2.45042)
+rs.m3 <- c(-2.67998, -0.48657,  0.03269,  0.54759,  2.33505)
+rs.m2.sum <- sum(rs.m2)
+rs.m3.sum <- sum(rs.m3)
+rs.m2.sum
+rs.m3.sum
+ans4g <- "model 2 produced -0.15373 sum of residual squares, model 3 produced -0.25122 sum of residual squares"
