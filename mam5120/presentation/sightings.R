@@ -1,0 +1,7 @@
+number = c(6,4,3,3,7,8,10,9,8,8,7,5)
+days =  c(rep("morning",3), rep("afternoon",3), rep("evening",3), rep("night",3))
+sightings = data.frame(number,days)
+plot(number ~ days, data=sightings)
+results = aov(number ~ days, data=sightings)
+summary(results)
+TukeyHSD(results, conf.level = 0.95)
