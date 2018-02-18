@@ -46,7 +46,11 @@ z < c(5, 10, 11) # TRUE TRUE FALSE
 sin(z)
 sqrt(z)
 
+
+####################
 #################### PLOTTING
+####################
+
 
 v <- c(6,9,2)
 v
@@ -65,9 +69,11 @@ x <- -10:10 # values
 y <- abs(x) # absolutes
 plot(x, y)
 
+
 ####################
 #################### MATRICES
 ####################
+
 
 matrix(0,3,4)
 matrix(1,5,5)
@@ -99,3 +105,38 @@ persp(e, expand=0.25)
 contour(volcano) # terrain flat
 persp(volcano, expand = 0.75) # terrain 3D
 image(volcano) #heatmap
+
+
+####################
+#################### SUMMARY STATS
+####################
+
+
+l <- c(4, 3, 4, 3, 7, 2, 2.5, 3.5) # length of bees
+names(l) <- c("barry", "bonny", "brenda", "beatrice", "ben", "bob", "barbara", "becky")
+l
+barplot(l)
+abline(h = mean(l), col="blue") # needs to be 'h' horizontal | v = vertical
+abline(h = median(l), col="red")
+
+p <- c(45000, 50000, 35000, 40000, 35000, 45000, 10000, 15000) # treasure loot
+m <- mean(p)
+d <- sd(p) # standard deviation: from mean to describe range of typical values showing how much they vary from average value
+barplot(p)
+abline(h = m, col="red")
+text(m, "mean", col="red") 
+abline(h = d, col="blue")
+text(d, "sd", col="blue")
+abline(h = m + d, col="purple")
+text((m+d), "mean+sd", col="purple")
+abline(h = m - d, col="orange")
+text((m-d), "mean-sd", col="orange")
+
+
+####################
+#################### FACTORS
+####################
+
+
+# http://tryr.codeschool.com/levels/5/challenges/2
+
