@@ -138,5 +138,51 @@ text((m-d), "mean-sd", col="orange")
 ####################
 
 
-# http://tryr.codeschool.com/levels/5/challenges/2
+s <- c('meerkat', 'lizard', 'owl', 'meerkat', 'owl')
+t <- factor(s)
+as.integer(t) # assigns strings to an integer based on alphabetically
+#levels(t)
+w <- c(110, 175, 100, 250, 55) # weight
+p <- c(2000, 1000, 1200, 3200, 800) # price
 
+plot(w, p, pch=as.integer(t))
+# hint: see how plots first before applying legend
+legend("bottomright", c("lizard", "meerkat", "owl"), pch=1:3)
+legend("topleft", levels(t), pch=1:length(levels(t)))
+
+# help(package = "ggplot2")
+# install.packages("ggplot2")
+library(ggplot2)
+qplot(w, p, color=t) +ggtitle("pet shop")
+
+####################
+#################### DATA FRAMES
+####################
+
+df <- data.frame(w, p, t)
+df[[2]] # checks column 2
+df[["w"]]
+df$t
+
+
+###################
+
+
+s <- read.csv("git/R/R/002/ships.csv")
+#df.s <- data.frame(s[1], s[2], s[3]) 
+#plot(df.s[,1], df.s[,2])
+p <- read.table("git/R/R/002/ports.txt", sep="\t", header=TRUE) # if header
+#df.p <- data.frame(p[1], p[2])
+#plot(df.p[,1], df.p[,2])
+
+m <- merge(x = s, y = p)
+plot(m$port, m$population)
+legend("topleft", c("aber", "liv", "mad", "nor"))
+plot(m$port, m$income)
+plot(m$port, m$ships)
+
+plot(m$population, m$income)
+#legend("topleft", c("aber", "liv", "mad", "nor"), pch=1:4)
+cor.test(m$population, m$income) # if less than 0.05 then results are considered significant
+l <- lm(m$income ~ m$population)
+abline(l)

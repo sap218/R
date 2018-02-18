@@ -1,0 +1,5 @@
+port	ships
+norway	200
+aberystwyth	250
+liverpool	1000
+madagascar	175
