@@ -2,84 +2,31 @@
 # Workbook 1 - Epidemiology
 # Samantha Pendleton - sap21
 
-# Question 1
-# a)
-# Modify the above code to find the number of susceptibles and infectious
-# (which will not necessarily be whole numbers), after 10 time units
-# if we start off with 5000 susceptibles, 100 infectious and 900 removed (i.e. N=6000),
-# using the following parameter values beta = 0.00008, gamma = 0.02
-S0 <- 5000 # Starting value for susceptibles
-I0 <- 100 # Starting value for infectious 
-N <- 6000 # Total population size 
-beta <- 0.00008 # infection rate 
-gamma <- 0.02 # recovery date 
-delta.t <- 0.1 # Small time increment 
-N.time.steps <- 3000 # Number of time steps 
-S <- numeric(N.time.steps+1) # Blank vector to receive S values 
-I <- numeric(N.time.steps+1) # Blank vector to receive I values 
-S[1] <- S0 # Initial value for S 
-I[1] <- I0 # Initial value for I 
-for (i in 1:N.time.steps){ # Iterative loop to define the next value of S and I 
-  S[i+1] <- S[i]-beta*S[i]*I[i]*delta.t
-  I[i+1] <- I[i]+beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t
-} 
-time.vector <- seq(0,N.time.steps*delta.t,by=delta.t) # The time points
-plot(time.vector,I,type="l",xlab="Time",ylab="I")
-
-# b)
-# Produce side by side plots, with suitable labeling,
-# of the number of susceptibles against time
-# and the number of infectious against t over the time interval [0,200] 
-N.time.steps <- 2000
-S <- numeric(N.time.steps+1)  
-I <- numeric(N.time.steps+1)  
-S[1] <- S0 
-I[1] <- I0 
-for (i in 1:N.time.steps){ 
-  S[i+1] <- S[i]-beta*S[i]*I[i]*delta.t
-  I[i+1] <- I[i]+beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t
-} 
-time.vector <- seq(0,N.time.steps*delta.t,by=delta.t) 
-time.point <- min(which(S<S0/2))*delta.t # calculate the time point at which the number of susceptibles
-                        # first drops below S0/2 (i.e. half of the initial number of susceptibles)
-par(mfrow=c(1,2)) 
-plot(time.vector,S,type="l",xlab="Time",ylab="S", ylim=c(0, 6000))
-points(time.point, 200)
-plot(time.vector,I,type="l",xlab="Time",ylab="I", ylim=c(0, 6000)) # ylim=c(0,6000)
-points(time.point, 200)
-
-# c)
-# To see how varying the infection rate, β, affects the time for the number of susceptibles to drop
-# below half of its initial value, produce a plot of time.point (on the y-axis) against β (x-axis)
-# for 100 equally spaced values of β between 0.00005 and 0.0003 (with γ held constant)
-# (Set up a vector of βs and calculate time.point for each element of the vector using a for loop.)
-beta <- seq(from=0.00005, to=0.0003, by=0.00005)
-time.point <- min(which(S<S0/2))*delta.t
-par(mfrow=c(1,1)) 
-#plot(beta,time.vector,type="o",xlab="beta",ylab="time") # doesn't work
-plot(0.00008,time.point,type="o",xlab="beta",ylab="time", xlim=c(0.00005,0.0003))
-
-# d)
-# For what value of β does the time for the number of susceptibles to drop
-# below half of its initial value first fall below 100 time units?
-time.point <- min(which(S<S0/100))*delta.t
-
-
-##############################################
-##############################################
+library(ggplot2)
 
 # Question 2
 # a)
-# Create a plot of number infected against week index with 
-# appropriate titles and axis labels
+# Create a plot of number infected against week index with appropriate titles and axis labels
 # Describe the epidemic curve
+s <- read.csv("git/R/R/mam5220/epidemiology.data.csv")
+df <- data.frame(s$Week, s$Time.index, s$No.infected)
+qplot(df$s.Week, df$s.No.infected,type="l",xlab="week",ylab="Infected", main="Infection rate over 30 weeks", geom = c("point","line")) 
+
+
+###########################
+
+# b)
+
+#par(mfrow=c(2,2))
+theta <- c(0.25, 0.5, 0.75, 1)
+
 I0 <- 61 # infectious 
 N <- 1000000 # population
-S0 <- (N-I0) # susceptibles
+S0 <- theta[1]*N
 gamma <- 1/14 # recovery date
-beta <- 10/(N/gamma) # infection rate - R0=10 basic reproduction number
+beta <- (10*gamma) / N # infection rate - R0=10 basic reproduction number
 delta.t <- 0.1 # small time increment 
-N.time.steps <- (7*300) # Number of time steps 
+N.time.steps <- (70*30) # Number of time steps 
 S <- numeric(N.time.steps+1)  
 I <- numeric(N.time.steps+1) 
 S[1] <- S0  
@@ -88,8 +35,55 @@ for (i in 1:N.time.steps){
   S[i+1] <- S[i]-beta*S[i]*I[i]*delta.t
   I[i+1] <- I[i]+beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t
 } 
-time.vector <- seq(0,N.time.steps*delta.t,by=delta.t) 
-par(mfrow=c(1,1)) 
-plot(time.vector,I,type="l",xlab="Time",ylab="I", ylim=c(0,1000000))
+#time.vector <- seq(0,N.time.steps)
+I.1 <- I
+#S0.1 <- qplot(time.vector,I.1,xlab="Time",ylab="I", main="S0=theta*N (theta=0.25)", geom=c("point","line"), col="red") 
 
-# b)
+
+S0 <- theta[2]*N
+S <- numeric(N.time.steps+1)  
+I <- numeric(N.time.steps+1) 
+S[1] <- S0  
+I[1] <- I0
+for (i in 1:N.time.steps){  
+  S[i+1] <- S[i]-beta*S[i]*I[i]*delta.t
+  I[i+1] <- I[i]+beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t
+} 
+I.2 <- I
+#S0.2 <- qplot(time.vector,I.2,xlab="Time",ylab="I", main="S0=theta*N (theta=0.5)", geom=c("point","line"), col="blue") 
+
+
+S0 <- theta[3]*N
+S <- numeric(N.time.steps+1)  
+I <- numeric(N.time.steps+1) 
+S[1] <- S0  
+I[1] <- I0
+for (i in 1:N.time.steps){  
+  S[i+1] <- S[i]-beta*S[i]*I[i]*delta.t
+  I[i+1] <- I[i]+beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t
+} 
+I.3 <- I
+#S0.3 <- qplot(time.vector,I.3,xlab="Time",ylab="I", main="S0=theta*N (theta=0.75)", geom=c("point","line"), colour="green") 
+
+
+S0 <- theta[4]*N
+S <- numeric(N.time.steps+1)  
+I <- numeric(N.time.steps+1) 
+S[1] <- S0  
+I[1] <- I0
+for (i in 1:N.time.steps){  
+  S[i+1] <- S[i]-beta*S[i]*I[i]*delta.t
+  I[i+1] <- I[i]+beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t
+} 
+I.4 <- I
+#S0.4 <- qplot(time.vector,I.4,xlab="Time",ylab="I", main="S0=theta*N (theta=1.0)", geom=c("point","line"), col="yellow") 
+
+
+#time.vector <- seq(0,N.time.steps) # time index
+time.vector <- seq(0,30,by=30/N.time.steps) # days
+#grid.arrange(S0.1, S0.2, S0.3, S0.4) # ncol=1
+require(scales)
+ggplot(subtitle="time") + geom_line(aes(time.vector,I.1, color="0.25")) + geom_line(aes(time.vector,I.2, color="0.5")) + 
+  geom_line(aes(time.vector,I.3, color="0.75")) + geom_line(aes(time.vector,I.4, color="1")) +
+  scale_y_continuous(labels=comma, name="num of infected") + labs(color="theta") + xlab("week")
+
