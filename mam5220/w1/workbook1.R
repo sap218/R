@@ -4,20 +4,17 @@
 
 library(ggplot2)
 library(readr)
+# https://stackoverflow.com/questions/5293715/how-to-use-greek-symbols-in-ggplot2
 
 # Question 2
-
 # a)
-# Describe the epidemic curve
-
-#epid <- read.csv("git/R/R/mam5220/epidemiology.data.csv") # for laptop
-epid <- read_csv("/aber/sap21/git/R/R/mam5220/epidemiology.data.csv") # for computer
-qplot(epid$Week, epid$No.infected, xlab="Week", ylab="Infected", main="Infection rate over 30 weeks", geom = c("point","line")) 
+epid <- read.csv("~/git/R/R/mam5220/w1/epidemiology.data.csv") # for laptop
+epid <- read_csv("/aber/sap21/git/R/R/mam5220/w1/epidemiology.data.csv") # for computer
+qplot(epid$Week, epid$No.infected, xlab="Week", ylab="Infected", ylim=c(0,100000), main="Number of Infected over 30 weeks \nΝ=1000000, R0=10, γ=1/14, Δt=0.1", geom = c("point","line")) 
 
 ###########################
 
 # b)
-
 theta <- c(0.25, 0.5, 0.75, 1)
 
 I0 <- 61 
@@ -81,12 +78,13 @@ time.vector <- seq(0,30,by=30/N.time.steps) # days
 require(scales)
 ggplot() + geom_line(aes(time.vector,I.1, color="0.25")) + geom_line(aes(time.vector,I.2, color="0.5")) + 
   geom_line(aes(time.vector,I.3, color="0.75")) + geom_line(aes(time.vector,I.4, color="1")) +
-  scale_y_continuous(labels=comma, name="number of infected") + labs(color="theta") + xlab("week") + ggtitle("insert title")
+  scale_y_continuous(labels=comma, name="Infected", breaks=seq(0,700000,by=50000)) + labs(color="theta θ") + xlab("Week") + 
+  labs(title = "Number of Infected over 30 Weeks with SIR Model", subtitle = "Ν=1000000, R0=10, γ=1/14, Δt=0.1, S0=θΝ") +
+  scale_x_continuous(breaks=seq(0,30,by=1))
 
 ###########################
 
 # c)  
-
 errorSS <- function(epid, N=1000000, R0=10, D=14, theta, N.time.steps=2100, delta.t=0.1) {
   gamma <- 1/D
   beta <- R0*gamma/N
@@ -104,55 +102,32 @@ errorSS <- function(epid, N=1000000, R0=10, D=14, theta, N.time.steps=2100, delt
   errorSS <- sum(epid$No.infected-I[sample.index])^2
   return(errorSS)
 }
-
 log(errorSS(epid = epid, theta = theta[1]))
 log(errorSS(epid = epid, theta = theta[2]))
 log(errorSS(epid = epid, theta = theta[3]))
 log(errorSS(epid = epid, theta = theta[4]))
 
 ###########################
-###########################
 
-# d) ##### FIX THESE BELOW 
-# vector of theta values [0, 0.01, 0.02, ..., 0.98, 0.99, 1.00]
-# Produce plots of (error sum of squares against theta) and (log error sum of squares against theta)
-
-#theta <- seq(0.01:1.00, by=0.01)
-#for (i in 1:100) {
-#  errorSS(epid = epid, theta = theta[1])
-#  theta[1] +1
-#}
-theta <- c(0.25, 0.5, 0.75, 1)
-
-et1 <- errorSS(epid = epid, theta = theta[1])
-et2 <- errorSS(epid = epid, theta = theta[2])
-et3 <- errorSS(epid = epid, theta = theta[3])
-et4 <- errorSS(epid = epid, theta = theta[4])
-
-et11 <- log(errorSS(epid = epid, theta = theta[1]))
-et22 <- log(errorSS(epid = epid, theta = theta[2]))
-et33 <- log(errorSS(epid = epid, theta = theta[3]))
-et44 <- log(errorSS(epid = epid, theta = theta[4]))
-
-par(mfrow=c(1,2)) 
-plot(x=c(theta[1], theta[2], theta[3], theta[4]), y=c(et1, et2, et3, et4),
-     xlab="theta", ylab="error", main="insert title", type = ("l")) 
-plot(x=c(theta[1], theta[2], theta[3], theta[4]), y=c(et11, et22, et33, et44),
-     xlab="theta", ylab="error (log)", main="insert title", type = ("l")) 
-
-#qplot(x=c(theta[1], theta[2], theta[3], theta[4]), y=c(et1, et2, et3, et4),
-#      xlab="theta", ylab="error", main="insert title", geom = c("point","line")) 
+# d)
+theta <- seq(0,1.00, by=0.01)
+theta.x <- theta
+for (i in 1:length(theta)) {
+  theta[i] <- errorSS(epid = epid, theta = theta[i])
+}
+#qplot(theta.x, theta)
+par(mfrow=c(1,2))
+plot(theta.x,theta, main="insert title", type="l") # error sum of squares against theta 
+plot(theta.x,log(theta), main="insert title (log)") # log esos against theta
      
 ###########################
 
-# e) 
+# e)  DO THESE
 # f)
 
-
 #################################################################################
 #################################################################################
 #################################################################################
-
 
 # Question 3
 
