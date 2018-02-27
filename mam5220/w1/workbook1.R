@@ -13,6 +13,7 @@ epid <- read_csv("/aber/sap21/git/R/R/mam5220/w1/epidemiology.data.csv") # for c
 qplot(epid$Week, epid$No.infected, xlab="Week", ylab="Infected", ylim=c(0,100000), main="Number of Infected over 30 weeks \nΝ=1000000, R0=10, γ=1/14, Δt=0.1", geom = c("point","line")) 
 
 ###########################
+###########################
 
 # b)
 theta <- c(0.25, 0.5, 0.75, 1)
@@ -83,6 +84,7 @@ ggplot() + geom_line(aes(time.vector,I.1, color="0.25")) + geom_line(aes(time.ve
   scale_x_continuous(breaks=seq(0,30,by=1))
 
 ###########################
+###########################
 
 # c)  
 errorSS <- function(epid, N=1000000, R0=10, D=14, theta, N.time.steps=2100, delta.t=0.1) {
@@ -101,7 +103,9 @@ errorSS <- function(epid, N=1000000, R0=10, D=14, theta, N.time.steps=2100, delt
   }
   errorSS <- sum(epid$No.infected-I[sample.index])^2
   return(errorSS)
+  return(I)
 }
+
 log(errorSS(epid = epid, theta = theta[1]))
 log(errorSS(epid = epid, theta = theta[2]))
 log(errorSS(epid = epid, theta = theta[3]))
@@ -122,9 +126,23 @@ plot(theta.x,log(theta), main="insert title (log)") # log esos against theta
      
 ###########################
 
-# e)  DO THESE
+# e)
+print(min(i))
+which.min(i)
+
+par(mfrow=c(1,2))
+plot(theta.x,theta, main="insert title", type="l") # error sum of squares against theta 
+abline(v=(which.min(i)), col="blue")
+plot(theta.x,log(theta), main="insert title (log)") # log esos against theta
+abline(h=(min(i)), col="blue")
+
+###########################
+
 # f)
 
+#################################################################################
+#################################################################################
+#################################################################################
 #################################################################################
 #################################################################################
 #################################################################################
@@ -142,19 +160,49 @@ beta <- R0*gamma/N
 
 # b) 
 
-theta <- c(0.001, 0.2, 0.25, 0.5, 0.55, 0.6, 0.65, 0.75, 0.85, 0.95, 1)
+theta <- seq(0,1.00, by=0.01)
 S0 <- theta*N
-I0 <- c(0.001, 0.2, 0.25, 0.5, 0.55, 0.6, 0.65, 0.75, 0.85, 0.95, 1) #  consider a range of possible values
-
+#S0 <- S0[2]
+I0 <- 1
 N.time.steps <- 3000 # ??
+
+##
+
+#theta.x <- theta
+for (i in 1:length(theta)) {
+  S <- numeric(N.time.steps+1) 
+  I <- numeric(N.time.steps+1) 
+  S[1] <- S0
+  I[1] <- I0 
+  for (i in 1:N.time.steps){ 
+    S[i+1] <- S[i]-beta*S[i]*I[i]*delta.t
+    I[i+1] <- I[i]+beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t
+  } 
+  time.vector[i] <- seq(0,N.time.steps*delta.t,by=delta.t) 
+}
+par(mfrow=c(1,1))
+plot((time.vector/10),I, main="insert title", type="l") 
+
+##
 
 S <- numeric(N.time.steps+1) 
 I <- numeric(N.time.steps+1) 
-S[1] <- S0[5] 
-I[1] <- I0[7] 
+S[1] <- S0
+I[1] <- I0 
 for (i in 1:N.time.steps){ 
   S[i+1] <- S[i]-beta*S[i]*I[i]*delta.t
   I[i+1] <- I[i]+beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t
 } 
 time.vector <- seq(0,N.time.steps*delta.t,by=delta.t) 
+par(mfrow=c(1,1))
 plot(time.vector,I,type="l",xlab="Time",ylab="I")
+
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+#################################################################################
+
+# Question 4
+
+# a)
