@@ -3,6 +3,8 @@
 # Samantha Pendleton - sap21
 
 library(ggplot2)
+require(scales)
+library(gridExtra)
 library(readr)
 # https://stackoverflow.com/questions/5293715/how-to-use-greek-symbols-in-ggplot2
 
@@ -76,7 +78,7 @@ I.4 <- I
 
 #time.vector <- seq(0,N.time.steps) # time index
 time.vector <- seq(0,30,by=30/N.time.steps) # days
-require(scales)
+
 ggplot() + geom_line(aes(time.vector,I.1, color="0.25")) + geom_line(aes(time.vector,I.2, color="0.5")) + 
   geom_line(aes(time.vector,I.3, color="0.75")) + geom_line(aes(time.vector,I.4, color="1")) +
   scale_y_continuous(labels=comma, name="Infected", breaks=seq(0,700000,by=50000)) + labs(color="theta θ") + xlab("Week") + 
@@ -86,7 +88,11 @@ ggplot() + geom_line(aes(time.vector,I.1, color="0.25")) + geom_line(aes(time.ve
 ###########################
 ###########################
 
-# c)  
+# c)
+epid <- read.csv("~/git/R/R/mam5220/w1/epidemiology.data.csv") # for laptop
+epid <- read_csv("/aber/sap21/git/R/R/mam5220/w1/epidemiology.data.csv") # for computer
+
+theta <- c(0.25, 0.5, 0.75, 1)
 errorSS <- function(epid, N=1000000, R0=10, D=14, theta, N.time.steps=2100, delta.t=0.1) {
   gamma <- 1/D
   beta <- R0*gamma/N
@@ -99,11 +105,10 @@ errorSS <- function(epid, N=1000000, R0=10, D=14, theta, N.time.steps=2100, delt
   I[1] <- I0
   for (i in 1:N.time.steps) {
     S[i+1] <- S[i]-beta*S[i]*I[i]*delta.t
-    I[i+1] <- I[i]-beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t
+    I[i+1] <- I[i]+beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t
   }
   errorSS <- sum(epid$No.infected-I[sample.index])^2
   return(errorSS)
-  return(I)
 }
 
 log(errorSS(epid = epid, theta = theta[1]))
@@ -119,26 +124,53 @@ theta.x <- theta
 for (i in 1:length(theta)) {
   theta[i] <- errorSS(epid = epid, theta = theta[i])
 }
-#qplot(theta.x, theta)
-par(mfrow=c(1,2))
-plot(theta.x,theta, main="insert title", type="l") # error sum of squares against theta 
-plot(theta.x,log(theta), main="insert title (log)") # log esos against theta
-     
+errorss <- qplot(theta.x, theta, geom=c("point","line"), xlab="theta", ylab="error sum of squares")
+logerrorss <- qplot(theta.x, log(theta), geom=c("point","line"), xlab="theta", ylab="log error sum of squares")
+grid.arrange(errorss, logerrorss, ncol=2, top="ErrorSS of SIR Model when varying θ seq(0,1, by=0.01) \nΝ=1000000, R0=10, γ=1/14, Δt=0.1, S0=θΝ")
+
 ###########################
 
 # e)
-print(min(i))
-which.min(i)
+m <- which.min(theta)
+best.theta <- (theta.x[m])
+lm <- log(errorSS(epid = epid, theta = best.theta))
 
 par(mfrow=c(1,2))
-plot(theta.x,theta, main="insert title", type="l") # error sum of squares against theta 
-abline(v=(which.min(i)), col="blue")
-plot(theta.x,log(theta), main="insert title (log)") # log esos against theta
-abline(h=(min(i)), col="blue")
+plot(theta.x,theta, type="l", xlab="theta", ylab="error sum of squares") 
+abline(h=m, v=0.3, col="blue")
+plot(theta.x,log(theta), type="l", xlab="theta", ylab="log error sum of squares") 
+abline(h=lm, v=0.3, col="red")
 
 ###########################
 
 # f)
+# 0.3 theta
+epid <- read.csv("~/git/R/R/mam5220/w1/epidemiology.data.csv") # for laptop
+epid <- read_csv("/aber/sap21/git/R/R/mam5220/w1/epidemiology.data.csv") # for computer
+
+theta <- 0.3
+I0 <- 61 
+N <- 1000000 
+gamma <- 1/14 
+beta <- (10*gamma) / N 
+delta.t <- 0.1 
+N.time.steps <- (70*30)  
+S0 <- theta[1]*N
+S <- numeric(N.time.steps+1)  
+I <- numeric(N.time.steps+1) 
+S[1] <- S0  
+I[1] <- I0
+for (i in 1:N.time.steps){  
+  S[i+1] <- S[i]-beta*S[i]*I[i]*delta.t
+  I[i+1] <- I[i]+beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t
+} 
+time.vector <- seq(0,30,by=30/N.time.steps)
+
+ggplot() + geom_line(aes(epid$Week,epid$No.infected, color="real")) + geom_line(aes(time.vector,I, color="simulation")) + 
+  scale_y_continuous(labels=comma, name="Infected", breaks=seq(0,100000,by=5000)) + labs(color="Model") + xlab("Week") + 
+  labs(title = "Number of Infected over 30 Weeks, SIR Model Vs. Real", subtitle = "Ν=1000000, R0=10, γ=1/14, Δt=0.1, S0=0.3*Ν") +
+  scale_x_continuous(breaks=seq(0,30,by=1))
+
 
 #################################################################################
 #################################################################################
