@@ -188,46 +188,61 @@ gamma <- 0.1
 delta.t <- 0.1
 beta <- R0*gamma/N
 
-###########################
+############
 
 # b) 
+theta <- c(0.01, 0.1, 0.2, 0.25)
+I0 <- c(1,100,10000,1000000)
+N.time.steps <- (70*30)  
+time.vector <- seq(0,30,by=30/N.time.steps) # days | time index
 
-theta <- seq(0,1.00, by=0.01)
-S0 <- theta*N
-#S0 <- S0[2]
-I0 <- 1
-N.time.steps <- 3000 # ??
+infecteds <- list()
 
-##
+for (k in 1:length(I0)) {
+  I0.current <- I0[k]
 
-#theta.x <- theta
-for (i in 1:length(theta)) {
-  S <- numeric(N.time.steps+1) 
-  I <- numeric(N.time.steps+1) 
-  S[1] <- S0
-  I[1] <- I0 
-  for (i in 1:N.time.steps){ 
-    S[i+1] <- S[i]-beta*S[i]*I[i]*delta.t
-    I[i+1] <- I[i]+beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t
-  } 
-  time.vector[i] <- seq(0,N.time.steps*delta.t,by=delta.t) 
+  infecteds[[k]] <- list()  
+  for (j in 1:length(theta)) {
+    theta.current <- theta[j]
+    
+    S0 <- theta.current*N
+    S <- numeric(N.time.steps+1)  
+    I <- numeric(N.time.steps+1) 
+    S[1] <- S0  
+    I[1] <- I0.current
+    for (i in 1:N.time.steps){  
+      S[i+1] <- S[i]-beta*S[i]*I[i]*delta.t
+      I[i+1] <- I[i]+beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t
+    } 
+    infecteds[[k]][[j]] <- I
+  }
 }
-par(mfrow=c(1,1))
-plot((time.vector/10),I, main="insert title", type="l") 
 
-##
+p1 <- ggplot() + geom_line(aes(time.vector,infecteds[[1]][[1]], color="0.01")) + geom_line(aes(time.vector,infecteds[[1]][[2]], color="0.1")) + 
+  geom_line(aes(time.vector,infecteds[[1]][[3]], color="0.2")) + geom_line(aes(time.vector,infecteds[[1]][[4]], color="0.25")) +
+  scale_y_continuous(labels=comma, name="Infected", breaks=seq(0,5000000,by=100000)) + labs(color="theta θ") + xlab("Week") + 
+  labs(subtitle = "I0 = 1") + scale_x_continuous(breaks=seq(0,30,by=1))
 
-S <- numeric(N.time.steps+1) 
-I <- numeric(N.time.steps+1) 
-S[1] <- S0
-I[1] <- I0 
-for (i in 1:N.time.steps){ 
-  S[i+1] <- S[i]-beta*S[i]*I[i]*delta.t
-  I[i+1] <- I[i]+beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t
-} 
-time.vector <- seq(0,N.time.steps*delta.t,by=delta.t) 
-par(mfrow=c(1,1))
-plot(time.vector,I,type="l",xlab="Time",ylab="I")
+p2 <- ggplot() + geom_line(aes(time.vector,infecteds[[2]][[1]], color="0.01")) + geom_line(aes(time.vector,infecteds[[2]][[2]], color="0.1")) + 
+  geom_line(aes(time.vector,infecteds[[2]][[3]], color="0.2")) + geom_line(aes(time.vector,infecteds[[2]][[4]], color="0.25")) +
+  scale_y_continuous(labels=comma, name="Infected", breaks=seq(0,5000000,by=100000)) + labs(color="theta θ") + xlab("Week") + 
+  labs(subtitle = "I0 = 1000") +
+  scale_x_continuous(breaks=seq(0,30,by=1))
+
+p3 <- ggplot() + geom_line(aes(time.vector,infecteds[[3]][[1]], color="0.01")) + geom_line(aes(time.vector,infecteds[[3]][[2]], color="0.1")) + 
+  geom_line(aes(time.vector,infecteds[[3]][[3]], color="0.2")) + geom_line(aes(time.vector,infecteds[[3]][[4]], color="0.25")) +
+  scale_y_continuous(labels=comma, name="Infected", breaks=seq(0,5000000,by=100000)) + labs(color="theta θ") + xlab("Week") + 
+  labs(subtitle = "I0 = 10,000") +
+  scale_x_continuous(breaks=seq(0,30,by=1))
+
+p4 <- ggplot() + geom_line(aes(time.vector,infecteds[[4]][[1]], color="0.01")) + geom_line(aes(time.vector,infecteds[[4]][[2]], color="0.1")) + 
+  geom_line(aes(time.vector,infecteds[[4]][[3]], color="0.2")) + geom_line(aes(time.vector,infecteds[[4]][[4]], color="0.25")) +
+  scale_y_continuous(labels=comma, name="Infected", breaks=seq(0,5000000,by=250000)) + labs(color="theta θ") + xlab("Week") + 
+  labs(subtitle = "I0 = 1,000,000") +
+  scale_x_continuous(breaks=seq(0,30,by=1))
+
+grid.arrange(p1, p2, p3, p4, ncol=1, top="Number of Infected over 30 Weeks with SIR Model \nΝ=5000000, R0=20, γ=0.1, Δt=0.1, S0=θΝ")
+
 
 #################################################################################
 #################################################################################
