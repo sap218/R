@@ -244,9 +244,6 @@ grid.arrange(p1, p2, p3, p4, ncol=1, top="Number of Infected over 30 Weeks with 
 N <- 800000
 S0 <- 0.02*N
 I0 <- 50
-R0 <- 6
-N.time.steps <- 20000
-B <- (30*(N/1000)/365) # daily birth rate
 gamma <- 0.1
 delta.t <- 0.1
 
@@ -265,11 +262,43 @@ generate.S.I.by.time.vital.dynamics <- function(N.time.steps, delta.t=0.1, S0, I
   return(out)
 }
 
-data <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0, gamma=gamma, mu=(B/N*10), N=N)
-# B = mu*N | mu = B/N
+R0 <- 6
+N.time.steps <- 2500
+#B <- (30*(N/1000)/365) # daily birth number
+B.rate <- ((30/1000)/365)*10 # daily birth rate, 10 daily timesteps
+
+data <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0, gamma=gamma, mu=(B.rate), N=N)
+# B = mu*N | mu = B/N | mu=(B/N*10)
 
 par(mfrow=c(1,2))
 plot(data$time.vector, data$S, type="l", col="red", xlab="Time", ylab="suspectibles count")
 plot(data$time.vector, data$I, type="l", col="blue", xlab="Time", ylab="infected count")
 
+
+
+
+
+
+#############
+
+# c)
+N.time.steps <- 20000
+R0 <- c(6, 8, 10, 12)
+data.r01 <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0[1], gamma=gamma, mu=(mu=(B/N*10)), N=N)
+data.r02 <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0[2], gamma=gamma, mu=(mu=(B/N*10)), N=N)
+data.r03 <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0[3], gamma=gamma, mu=(mu=(B/N*10)), N=N)
+data.r04 <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0[4], gamma=gamma, mu=(mu=(B/N*10)), N=N)
+
+par(mfrow=c(4,2))
+plot(data.r01$time.vector, data.r01$S, type="l", col="red", xlab=" ", ylab="suspectibles count", main="R0=6")
+plot(data.r01$time.vector, data.r01$I, type="l", col="blue", xlab=" ", ylab="infected count", main="R0=6")
+
+plot(data.r02$time.vector, data.r02$S, type="l", col="red", xlab=" ", ylab="suspectibles count", main="R0=8")
+plot(data.r02$time.vector, data.r02$I, type="l", col="blue", xlab=" ", ylab="infected count", main="R0=6")
+
+plot(data.r03$time.vector, data.r03$S, type="l", col="red", xlab=" ", ylab="suspectibles count", main="R0=10")
+plot(data.r03$time.vector, data.r03$I, type="l", col="blue", xlab=" ", ylab="infected count", main="R0=6")
+
+plot(data.r04$time.vector, data.r04$S, type="l", col="red", xlab="Time", ylab="suspectibles count", main="R0=12")
+plot(data.r04$time.vector, data.r04$I, type="l", col="blue", xlab="Time", ylab="infected count", main="R0=6")
 
