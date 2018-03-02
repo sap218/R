@@ -239,4 +239,37 @@ grid.arrange(p1, p2, p3, p4, ncol=1, top="Number of Infected over 30 Weeks with 
 
 # Question 4
 
-# a)
+# b) - diphtheria
+
+N <- 800000
+S0 <- 0.02*N
+I0 <- 50
+R0 <- 6
+N.time.steps <- 20000
+B <- (30*(N/1000)/365) # daily birth rate
+gamma <- 0.1
+delta.t <- 0.1
+
+generate.S.I.by.time.vital.dynamics <- function(N.time.steps, delta.t=0.1, S0, I0, R0, gamma, mu, N) {
+  S <- numeric(N.time.steps+1)
+  I <- numeric(N.time.steps+1)
+  S[1] <- S0
+  I[1] <- I0
+  beta <- R0*gamma/N
+  for (i in 1:N.time.steps) {
+    S[i+1] <- S[i]+mu*N*delta.t-beta*S[i]*I[i]*delta.t-mu*S[i]*delta.t
+    I[i+1] <- I[i]+beta*S[i]*I[i]*delta.t-gamma*I[i]*delta.t-mu*I[i]*delta.t
+  }
+  time.vector <- seq(0, N.time.steps*delta.t, by=delta.t)
+  out <- list(S=S, I=I, time.vector=time.vector)
+  return(out)
+}
+
+data <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0, gamma=gamma, mu=(B/N*10), N=N)
+# B = mu*N | mu = B/N
+
+par(mfrow=c(1,2))
+plot(data$time.vector, data$S, type="l", col="red", xlab="Time", ylab="suspectibles count")
+plot(data$time.vector, data$I, type="l", col="blue", xlab="Time", ylab="infected count")
+
+
