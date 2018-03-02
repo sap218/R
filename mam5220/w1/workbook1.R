@@ -10,8 +10,8 @@ library(readr)
 
 # Question 2
 # a)
-epid <- read.csv("~/git/R/R/mam5220/w1/epidemiology.data.csv") # for laptop
-epid <- read_csv("/aber/sap21/git/R/R/mam5220/w1/epidemiology.data.csv") # for computer
+epid <- read.csv("~/git/R/R/mam5220/w1/epidemiology.data.csv") # for laptop directory
+epid <- read_csv("/aber/sap21/git/R/R/mam5220/w1/epidemiology.data.csv") # for university computers
 qplot(epid$Week, epid$No.infected, xlab="Week", ylab="Infected", ylim=c(0,100000), main="Number of Infected over 30 weeks \nΝ=1000000, R0=10, γ=1/14, Δt=0.1", geom = c("point","line")) 
 
 ###########################
@@ -89,9 +89,6 @@ ggplot() + geom_line(aes(time.vector,I.1, color="0.25")) + geom_line(aes(time.ve
 ###########################
 
 # c)
-epid <- read.csv("~/git/R/R/mam5220/w1/epidemiology.data.csv") # for laptop
-epid <- read_csv("/aber/sap21/git/R/R/mam5220/w1/epidemiology.data.csv") # for computer
-
 theta <- c(0.25, 0.5, 0.75, 1)
 errorSS <- function(epid, N=1000000, R0=10, D=14, theta, N.time.steps=2100, delta.t=0.1) {
   gamma <- 1/D
@@ -144,10 +141,6 @@ abline(h=lm, v=0.3, col="red")
 ###########################
 
 # f)
-# 0.3 theta
-epid <- read.csv("~/git/R/R/mam5220/w1/epidemiology.data.csv") # for laptop
-epid <- read_csv("/aber/sap21/git/R/R/mam5220/w1/epidemiology.data.csv") # for computer
-
 theta <- 0.3
 I0 <- 61 
 N <- 1000000 
@@ -172,10 +165,6 @@ ggplot() + geom_line(aes(epid$Week,epid$No.infected, color="real")) + geom_line(
   scale_x_continuous(breaks=seq(0,30,by=1))
 
 
-#################################################################################
-#################################################################################
-#################################################################################
-#################################################################################
 #################################################################################
 #################################################################################
 
@@ -244,8 +233,6 @@ p4 <- ggplot() + geom_line(aes(time.vector,infecteds[[4]][[1]], color="0.01")) +
 grid.arrange(p1, p2, p3, p4, ncol=1, top="Number of Infected over 30 Weeks with SIR Model \nΝ=5000000, R0=20, γ=0.1, Δt=0.1, S0=θΝ")
 
 
-#################################################################################
-#################################################################################
 #################################################################################
 #################################################################################
 #################################################################################
