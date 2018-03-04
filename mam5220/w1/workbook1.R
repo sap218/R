@@ -209,29 +209,28 @@ for (k in 1:length(I0)) {
 
 p1 <- ggplot() + geom_line(aes(time.vector,infecteds[[1]][[1]], color="0.01")) + geom_line(aes(time.vector,infecteds[[1]][[2]], color="0.1")) + 
   geom_line(aes(time.vector,infecteds[[1]][[3]], color="0.2")) + geom_line(aes(time.vector,infecteds[[1]][[4]], color="0.25")) +
-  scale_y_continuous(labels=comma, name="Infected", breaks=seq(0,5000000,by=100000)) + labs(color="theta θ") + xlab("Week") + 
+  scale_y_continuous(labels=comma, name="Infected", limits=c(0,1750000)) + labs(color="theta θ") + xlab("Week") + 
   labs(subtitle = "I0 = 1") + scale_x_continuous(breaks=seq(0,30,by=1))
 
 p2 <- ggplot() + geom_line(aes(time.vector,infecteds[[2]][[1]], color="0.01")) + geom_line(aes(time.vector,infecteds[[2]][[2]], color="0.1")) + 
   geom_line(aes(time.vector,infecteds[[2]][[3]], color="0.2")) + geom_line(aes(time.vector,infecteds[[2]][[4]], color="0.25")) +
-  scale_y_continuous(labels=comma, name="Infected", breaks=seq(0,5000000,by=100000)) + labs(color="theta θ") + xlab("Week") + 
+  scale_y_continuous(labels=comma, name="Infected", limits=c(0,1750000)) + labs(color="theta θ") + xlab("Week") + 
   labs(subtitle = "I0 = 1000") +
   scale_x_continuous(breaks=seq(0,30,by=1))
 
 p3 <- ggplot() + geom_line(aes(time.vector,infecteds[[3]][[1]], color="0.01")) + geom_line(aes(time.vector,infecteds[[3]][[2]], color="0.1")) + 
   geom_line(aes(time.vector,infecteds[[3]][[3]], color="0.2")) + geom_line(aes(time.vector,infecteds[[3]][[4]], color="0.25")) +
-  scale_y_continuous(labels=comma, name="Infected", breaks=seq(0,5000000,by=100000)) + labs(color="theta θ") + xlab("Week") + 
+  scale_y_continuous(labels=comma, name="Infected", limits=c(0,1750000)) + labs(color="theta θ") + xlab("Week") + 
   labs(subtitle = "I0 = 10,000") +
   scale_x_continuous(breaks=seq(0,30,by=1))
 
 p4 <- ggplot() + geom_line(aes(time.vector,infecteds[[4]][[1]], color="0.01")) + geom_line(aes(time.vector,infecteds[[4]][[2]], color="0.1")) + 
   geom_line(aes(time.vector,infecteds[[4]][[3]], color="0.2")) + geom_line(aes(time.vector,infecteds[[4]][[4]], color="0.25")) +
-  scale_y_continuous(labels=comma, name="Infected", breaks=seq(0,5000000,by=250000)) + labs(color="theta θ") + xlab("Week") + 
+  scale_y_continuous(labels=comma, name="Infected", limits=c(0,1750000)) + labs(color="theta θ") + xlab("Week") + 
   labs(subtitle = "I0 = 1,000,000") +
   scale_x_continuous(breaks=seq(0,30,by=1))
 
 grid.arrange(p1, p2, p3, p4, ncol=1, top="Number of Infected over 30 Weeks with SIR Model \nΝ=5000000, R0=20, γ=0.1, Δt=0.1, S0=θΝ")
-
 
 #################################################################################
 #################################################################################
@@ -262,44 +261,27 @@ I0 <- 50
 gamma <- 0.1
 delta.t <- 0.1
 
-R0 <- 6
 N.time.steps <- 20000
+
+R0 <- 6
 #B <- (30*(N/1000)/365) # daily birth number
 B.rate <- ((30/1000)/365)*10 # daily birth rate, 10 daily timesteps
 # B = mu*N | mu = B/N | mu=(B/N*10)
 data <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0, gamma=gamma, mu=(B.rate), N=N)
-
-#par(mfrow=c(1,2))
-#plot(data$time.vector, data$S, type="l", col="red", xlab="Time", ylab="suspectibles count")
-par(mfrow=c(1,1))
-plot(data$time.vector, data$I, type="l", col="blue", xlab="Time", ylab="infected count", 
-     main=("Extending SIR model to include birth and death rates \nΝ=800000, R0=6, γ=0.1, Δt=0.1, S0=0.02*Ν, I0=50, 
-           time steps=20000, birth rate is 30 per 1000"))
-
-qplot(data$time.vector, data$I, xlab="Time", ylab="infected count", 
-     main=("Extending SIR model to include birth and death rates \nΝ=800000, R0=6, γ=0.1, Δt=0.1, S0=0.02*Ν, I0=50, 
-           time steps=20000, birth rate is 30 per 1000"), geom = c("point","line"))
+qplot(data$time.vector, data$I, xlab="Time Steps", ylab="Infected Count", 
+     main=("Extending SIR model to include birth and death rates \nΝ=800000, R0=6, γ=0.1, Δt=0.1, S0=0.02*Ν, I0=50, birth rate is 30 per 1000"),
+     geom = c("point","line"))
 
 #############
 
 # c)
 R0 <- c(6, 8, 10, 12)
 N.time.steps <- 20000
+B.rate <- ((30/1000)/365)*10 
 data.r01 <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0[1], gamma=gamma, mu=(B.rate), N=N)
 data.r02 <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0[2], gamma=gamma, mu=(B.rate), N=N)
 data.r03 <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0[3], gamma=gamma, mu=(B.rate), N=N)
 data.r04 <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0[4], gamma=gamma, mu=(B.rate), N=N)
-
-par(mfrow=c(4,2))
-par(mfrow=c(2,2))
-#plot(data.r01$time.vector, data.r01$S, type="l", col="red", xlab=" ", ylab="suspectibles count", main="R0=6")
-plot(data.r01$time.vector, data.r01$I, type="l", col="blue", xlab=" ", ylab="infected count", main="R0=6")
-#plot(data.r02$time.vector, data.r02$S, type="l", col="red", xlab=" ", ylab="suspectibles count", main="R0=8")
-plot(data.r02$time.vector, data.r02$I, type="l", col="blue", xlab=" ", ylab="infected count", main="R0=8")
-#plot(data.r03$time.vector, data.r03$S, type="l", col="red", xlab=" ", ylab="suspectibles count", main="R0=10")
-plot(data.r03$time.vector, data.r03$I, type="l", col="blue", xlab=" ", ylab="infected count", main="R0=10")
-#plot(data.r04$time.vector, data.r04$S, type="l", col="red", xlab="Time", ylab="suspectibles count", main="R0=12")
-plot(data.r04$time.vector, data.r04$I, type="l", col="blue", xlab="Time", ylab="infected count", main="R0=12")
 
 p1 <- ggplot() + geom_line(aes(data.r01$time.vector, data.r01$I)) +
   scale_y_continuous(labels=comma, name="Infected") + xlab(" ") + labs(subtitle = "R0 = 6") 
@@ -311,6 +293,10 @@ p4 <- ggplot() + geom_line(aes(data.r04$time.vector, data.r04$I)) +
   scale_y_continuous(labels=comma, name="Infected") + xlab("Time Steps") + labs(subtitle = "R0 = 12")
 grid.arrange(p1, p2, p3, p4, ncol=1, top="Number of Infected with SIR Model extended by including birth/death rates \nΝ=800000, γ=0.1, Δt=0.1, S0=0.02*Ν, I0=50, time steps=20000, birth rate is 30 per 1000")
 
+ggplot() + geom_line(aes(data.r01$time.vector,data.r01$I, color="a) 6")) + geom_line(aes(data.r02$time.vector,data.r02$I, color="b) 8")) + 
+  geom_line(aes(data.r03$time.vector,data.r03$I, color="c) 10")) + geom_line(aes(data.r04$time.vector,data.r04$I, color="d) 12")) +
+  scale_y_continuous(labels=comma, name="Infected") + labs(color="R0") + xlab("Time Steps") + 
+  labs(title = "Number of Infected with SIR Model extended by including birth/death rates", subtitle = "Ν=800000, γ=0.1, Δt=0.1, S0=0.02*Ν, birth rate is 30 per 1000")
 
 #############
 
@@ -323,25 +309,45 @@ data.b2 <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0,
 data.b3 <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0, gamma=gamma, mu=(B.rate[3]), N=N)
 data.b4 <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0, gamma=gamma, mu=(B.rate[4]), N=N)
 
-par(mfrow=c(2,2))
-plot(data.b1$time.vector, data.b1$I, type="l", col="blue", xlab="Time", ylab="infected count", main=("B=20"))
-plot(data.b2$time.vector, data.b2$I, type="l", col="blue", xlab="Time", ylab="infected count", main=("B=60"))
-plot(data.b3$time.vector, data.b3$I, type="l", col="blue", xlab="Time", ylab="infected count", main=("B=100"))
-plot(data.b4$time.vector, data.b4$I, type="l", col="blue", xlab="Time", ylab="infected count", main=("B=140"))
-
 p1 <- ggplot() + geom_line(aes(data.b1$time.vector, data.b1$I)) +
-  scale_y_continuous(labels=comma, name="Infected") + xlab(" ") + labs(subtitle = "B = 20") 
+  scale_y_continuous(labels=comma, name="Infected", limits=c(0,85000)) + xlab(" ") + labs(subtitle = "B = 20")
 p2 <- ggplot() + geom_line(aes(data.b2$time.vector, data.b2$I)) +
-  scale_y_continuous(labels=comma, name="Infected") + xlab(" ") + labs(subtitle = "B = 60")
+  scale_y_continuous(labels=comma, name="Infected", limits=c(0,85000)) + xlab(" ") + labs(subtitle = "B = 60")
 p3 <- ggplot() + geom_line(aes(data.b3$time.vector, data.b3$I)) +
-  scale_y_continuous(labels=comma, name="Infected") + xlab(" ") + labs(subtitle = "B = 100")
+  scale_y_continuous(labels=comma, name="Infected", limits=c(0,85000)) + xlab(" ") + labs(subtitle = "B = 100")
 p4 <- ggplot() + geom_line(aes(data.b4$time.vector, data.b4$I)) +
-  scale_y_continuous(labels=comma, name="Infected") + xlab("Time Steps") + labs(subtitle = "B = 140")
-grid.arrange(p1, p2, p3, p4, ncol=1, top="Number of Infected with SIR Model extended by including birth/death rates \nΝ=800000, R0=10, γ=0.1, Δt=0.1, S0=0.02*Ν, I0=50, time steps=20000")
-
+  scale_y_continuous(labels=comma, name="Infected", limits=c(0,85000)) + xlab("Time Steps") + labs(subtitle = "B = 140")
+grid.arrange(p1, p2, p3, p4, ncol=2, top="Number of Infected with SIR Model extended by including birth/death rates \nΝ=800000, R0=10, γ=0.1, Δt=0.1, S0=0.02*Ν, I0=50")
 
 #######################################
 
 # e)
 R0 <- 10
 B <- seq(20, 140, by=10)
+B.rate <- ((B/1000)/365)*10
+
+times <- list()
+peaks <- list()
+equ <- list()
+
+for (i in 1:length(B)) {
+  data <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0, I0=I0, R0=R0, gamma=gamma, mu=(B.rate[i]), N=N)
+  times[[i]] <- head((which(diff(sign(diff(data$I)))==-2)+1)/10, 4) # where peaks are on x-axis
+  peaks[[i]] <- head(data$I[which(diff(sign(diff(data$I)))==-2)+1], 4) # values of peaks
+  equ[[i]] <- mean(tail(data$I,100))
+}
+
+par(mfrow=c(3,1))
+plot(B[1], equ[[1]], xlim=c(20,140), ylim=c(0,30000), xlab=" ", ylab="Equilibrium Approximation",
+     main="Approximate equilibrium, first four infection and time peaks for varying birth rate; time steps=20000 \nΝ=800000, R0=10, γ=0.1, Δt=0.1, S0=0.02*Ν, I0=50")
+for (i in 2:length(B)) {
+  points(B[i], equ[[i]])
+}
+plot(rep(B[1], 4), peaks[[1]], xlim=c(20,140), ylim=c(0,max(peaks[[13]])), xlab=" ", ylab="Infection Peaks")
+for (i in 2:length(B)) {
+  points(rep(B[i], 4), peaks[[i]])
+}
+plot(rep(B[1], 4), times[[1]], xlim=c(20,140), ylim=c(0,max(times[[1]])), xlab="B (births per 1000)", ylab="Time Peaks")
+for (i in 2:length(B)) {
+  points(rep(B[i], 4), times[[i]])
+}
