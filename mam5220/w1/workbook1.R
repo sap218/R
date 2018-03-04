@@ -6,7 +6,6 @@ library(ggplot2)
 require(scales)
 library(gridExtra)
 library(readr)
-# https://stackoverflow.com/questions/5293715/how-to-use-greek-symbols-in-ggplot2
 
 # Question 2
 # a)
@@ -209,28 +208,28 @@ for (k in 1:length(I0)) {
 
 p1 <- ggplot() + geom_line(aes(time.vector,infecteds[[1]][[1]], color="0.01")) + geom_line(aes(time.vector,infecteds[[1]][[2]], color="0.1")) + 
   geom_line(aes(time.vector,infecteds[[1]][[3]], color="0.2")) + geom_line(aes(time.vector,infecteds[[1]][[4]], color="0.25")) +
-  scale_y_continuous(labels=comma, name="Infected", limits=c(0,1750000)) + labs(color="theta θ") + xlab("Week") + 
+  scale_y_continuous(labels=comma, name=" ", limits=c(0,1750000)) + labs(color="theta θ") + xlab(" ") + 
   labs(subtitle = "I0 = 1") + scale_x_continuous(breaks=seq(0,30,by=1))
 
 p2 <- ggplot() + geom_line(aes(time.vector,infecteds[[2]][[1]], color="0.01")) + geom_line(aes(time.vector,infecteds[[2]][[2]], color="0.1")) + 
   geom_line(aes(time.vector,infecteds[[2]][[3]], color="0.2")) + geom_line(aes(time.vector,infecteds[[2]][[4]], color="0.25")) +
-  scale_y_continuous(labels=comma, name="Infected", limits=c(0,1750000)) + labs(color="theta θ") + xlab("Week") + 
+  scale_y_continuous(labels=comma, name=" ", limits=c(0,1750000)) + labs(color="theta θ") + xlab(" ") + 
   labs(subtitle = "I0 = 1000") +
   scale_x_continuous(breaks=seq(0,30,by=1))
 
 p3 <- ggplot() + geom_line(aes(time.vector,infecteds[[3]][[1]], color="0.01")) + geom_line(aes(time.vector,infecteds[[3]][[2]], color="0.1")) + 
   geom_line(aes(time.vector,infecteds[[3]][[3]], color="0.2")) + geom_line(aes(time.vector,infecteds[[3]][[4]], color="0.25")) +
-  scale_y_continuous(labels=comma, name="Infected", limits=c(0,1750000)) + labs(color="theta θ") + xlab("Week") + 
+  scale_y_continuous(labels=comma, name=" ", limits=c(0,1750000)) + labs(color="theta θ") + xlab(" ") + 
   labs(subtitle = "I0 = 10,000") +
   scale_x_continuous(breaks=seq(0,30,by=1))
 
 p4 <- ggplot() + geom_line(aes(time.vector,infecteds[[4]][[1]], color="0.01")) + geom_line(aes(time.vector,infecteds[[4]][[2]], color="0.1")) + 
   geom_line(aes(time.vector,infecteds[[4]][[3]], color="0.2")) + geom_line(aes(time.vector,infecteds[[4]][[4]], color="0.25")) +
-  scale_y_continuous(labels=comma, name="Infected", limits=c(0,1750000)) + labs(color="theta θ") + xlab("Week") + 
+  scale_y_continuous(labels=comma, name=" ", limits=c(0,1750000)) + labs(color="theta θ") + xlab(" ") + 
   labs(subtitle = "I0 = 1,000,000") +
   scale_x_continuous(breaks=seq(0,30,by=1))
 
-grid.arrange(p1, p2, p3, p4, ncol=1, top="Number of Infected over 30 Weeks with SIR Model \nΝ=5000000, R0=20, γ=0.1, Δt=0.1, S0=θΝ")
+grid.arrange(p1, p2, p3, p4, ncol=1, top="Number of Infected over 30 Weeks with SIR Model \nΝ=5000000, R0=20, γ=0.1, Δt=0.1, S0=θΝ", left="Infected", bottom="Week")
 
 #################################################################################
 #################################################################################
@@ -312,11 +311,11 @@ data.b4 <- generate.S.I.by.time.vital.dynamics(N.time.steps=N.time.steps, S0=S0,
 p1 <- ggplot() + geom_line(aes(data.b1$time.vector, data.b1$I)) +
   scale_y_continuous(labels=comma, name="Infected", limits=c(0,85000)) + xlab(" ") + labs(subtitle = "B = 20")
 p2 <- ggplot() + geom_line(aes(data.b2$time.vector, data.b2$I)) +
-  scale_y_continuous(labels=comma, name="Infected", limits=c(0,85000)) + xlab(" ") + labs(subtitle = "B = 60")
+  scale_y_continuous(labels=comma, name=" ", limits=c(0,85000)) + xlab(" ") + labs(subtitle = "B = 60")
 p3 <- ggplot() + geom_line(aes(data.b3$time.vector, data.b3$I)) +
-  scale_y_continuous(labels=comma, name="Infected", limits=c(0,85000)) + xlab(" ") + labs(subtitle = "B = 100")
+  scale_y_continuous(labels=comma, name="Infected", limits=c(0,85000)) + xlab("Time Steps") + labs(subtitle = "B = 100")
 p4 <- ggplot() + geom_line(aes(data.b4$time.vector, data.b4$I)) +
-  scale_y_continuous(labels=comma, name="Infected", limits=c(0,85000)) + xlab("Time Steps") + labs(subtitle = "B = 140")
+  scale_y_continuous(labels=comma, name=" ", limits=c(0,85000)) + xlab("Time Steps") + labs(subtitle = "B = 140")
 grid.arrange(p1, p2, p3, p4, ncol=2, top="Number of Infected with SIR Model extended by including birth/death rates \nΝ=800000, R0=10, γ=0.1, Δt=0.1, S0=0.02*Ν, I0=50")
 
 #######################################
