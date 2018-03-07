@@ -64,23 +64,12 @@ acf(diff(sim.rwalk))
 # Exercise 1: Application to oil prices
 data("oil.price")
 
-# a) Is the series stationary? Explain evidence
+# a)
 par(mfrow=c(1,2))
-# (i) time series plot
-plot(oil.price, type='o', main="(i) Time Series of Oil Prices from 1986-2006", ylab="Price")
-# (ii) sample afc
-acf(oil.price, main="(ii) Sample afc Series")
+plot(oil.price, type='o', main="(i) Time Series of Oil Prices from 1986-2006", ylab="Price") # (i) time series plot
+acf(oil.price, main="(ii) Sample ACF Series") # (ii) sample afc
 
-# b) Construct the series of 1st differences of the logs of the oil price series
-# Examine the time series plot and the acf and comment on stationarity
-# Include your plots with discussion in your answers
-par(mfrow=c(1,3))
-plot(diff(oil.price), type='o') 
-acf(diff(oil.price))
-plot(y=oil.price, x=zlag(oil.price, d=1))
-
-##############################################################
-##############################################################
-##############################################################
-
-par(mfrow=c(1,1))
+# b) 
+par(mfrow=c(1,2))
+plot(diff(oil.price), type='o', main="(i) Time Series of 1st differences of \nOil Prices from 1986-2006", ylab="Price") 
+acf(diff(oil.price), main="(ii) Sample 1st differences ACF Series")
