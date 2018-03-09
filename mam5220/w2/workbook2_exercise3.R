@@ -33,15 +33,31 @@ ARMA.hare <- arima(hare,order=c(3,0,1)) # overfitting
 
 # Exercise
 
-par(mfrow=c(1,2))
-plot(hare, ylab='Abundance', xlab='Year', type='o') # comparative smoothness  of  this  plot  reflects  correlation  between  observations in successive years, ie autocorrelation
-sqrt.hare <- sqrt(hare)
-plot(sqrt.hare, ylab='Abundance', xlab='Year', type='o')
 
-ARI.sqrt.hare <- auto.arima(sqrt.hare)
-ARI.sqrt.hare
+
+
+
+
+
+
+
+
+###########################
+
+par(mfrow=c(1,2))
+data(hare)
+#plot(hare, ylab='Abundance', xlab='Year', type='o') # comparative smoothness  of  this  plot  reflects  correlation  between  observations in successive years, ie autocorrelation
+sqrt.hare <- sqrt(hare)
+#plot(sqrt.hare, ylab='Abundance', xlab='Year', type='o')
+
+AR1.hare <- arima(hare, order=c(1,0,0)) 
+AR1.hare
+AR1.sqrt.hare <- arima(sqrt.hare, order=c(1,0,0))
+AR1.sqrt.hare
 ARI.hare <- auto.arima(hare)
 ARI.hare
+ARI.sqrt.hare <- auto.arima(sqrt.hare)
+ARI.sqrt.hare
 
 # Model Residuals
 tsdisplay(residuals(ARI.hare), lag.max=45, main="Model Residuals")
