@@ -41,6 +41,16 @@ plot(diff(ima22.s), type='o', main="First Difference of the IMA(2,2) Simulation"
 plot(diff(ima22.s, differences = 2), type='o', main="Second Difference of the IMA(2,2) Simulation", ylab="Differenced Twice")
 plot(diff(ima22.s, differences = 3), type='o', main="Third Difference of the IMA(2,2) Simulation", ylab="Differenced Thrice")
 
+par(mfrow=c(4,2))
+plot(ima22.s, type='o', main="Simulation of an IMA(2,2) Series", ylab="Simulation")
+acf(ima22.s, main="ACF Simulation of an IMA(2,2) Series")
+plot(diff(ima22.s), type='o', main="First Difference of the IMA(2,2) Simulation", ylab="Differenced Once")
+acf(diff(ima22.s), main="ACF First Difference Simulation of the IMA(2,2) Series")
+plot(diff(ima22.s, differences = 2), type='o', main="Second Difference of the IMA(2,2) Simulation", ylab="Differenced Twice")
+acf(diff(ima22.s, differences = 2), main="ACF Second Difference Simulation of an IMA(2,2) Series")
+plot(diff(ima22.s, differences = 3), type='o', main="Third Difference of the IMA(2,2) Simulation", ylab="Differenced Thrice")
+acf(diff(ima22.s, differences = 3), main="ACF Third Differences Simulation of an IMA(2,2) Series")
+
 ##############################
 
 # 2.2
@@ -70,11 +80,63 @@ acf(diff(log(airpass), differences = 12), main="Autocorrelation of Residuals\nSe
 ##############################################################
 
 # Exercise 3. Hares and Roots!
+data(hare)
+arima(hare, order=c(1,0,0))
+arima(hare, order=c(2,0,0))
+arima(hare, order=c(3,0,0))
+auto.arima(hare)
+
+par(mfrow=c(2,2))
+pacf(residuals(arima(hare, order = c(1,0,0))), main="PACF Series ARMA(1,0,0) of Hare")
+pacf(residuals(arima(hare, order = c(2,0,0))), main="PACF Series ARMA(2,0,0) of Hare")
+pacf(residuals(arima(hare, order = c(3,0,0))), main="PACF Series ARMA(3,0,0) of Hare")
+pacf(residuals(auto.arima(hare)), main="PACF Series Automatic ARMA Model of Hare")
+par(mfrow=c(1,1))
+pacf(residuals(arima(hare, order = c(2,0,4))), main="PACF Series ARMA(2,0,4)")
+
+#
+
+sqrt.hare <- sqrt(hare)
+arima(sqrt.hare, order=c(1,0,0))
+arima(sqrt.hare, order=c(2,0,0))
+arima(sqrt.hare, order=c(3,0,0))
+auto.arima(sqrt.hare)
+
+par(mfrow=c(2,2))
+pacf(residuals(arima(sqrt.hare, order = c(1,0,0))), main="PACF Series ARMA(1,0,0) of Hare (square root)")
+pacf(residuals(arima(sqrt.hare, order = c(2,0,0))), main="PACF Series ARMA(2,0,0) of Hare (square root)")
+pacf(residuals(arima(sqrt.hare, order = c(3,0,0))), main="PACF Series ARMA(3,0,0) of Hare (square root)")
+pacf(residuals(auto.arima(sqrt.hare)), main="PACF Series Automatic ARMA Model of\nare (square root)")
+par(mfrow=c(1,1))
+pacf(residuals(arima(sqrt.hare, order = c(3,0,5))), main="PACF Series ARMA(3,0,5) of Hare (square root)")
 
 ##############################################################
 
 # Exercise 4. Forecasting
+# Simulate 50 values but set aside the last 10 values to compare forecasts with actual values
+phi <- 0.7
+mu <- 100
+
+data(hare)
+sim <- (arima.sim(list(order=c(1,0,0), ar=phi), n=50) +mu)
+sim.10 <- tail(sim, n=10)
+
 # a)
+arima((sim[1:40]), order=c(1,0,0))
+
+
+fit <- auto.arima(sim[1:40])
+fit
+plot(forecast(fit,h=40))
+
+
+
+
 # b)
 # c)
+
 # d)
+ml.hare <- arima(sqrt(hare),order=c(3,0,0))
+ml.hare
+plot(ml.hare,n.ahead=25,type='b',xlab='Year',ylab='Sqrt(hare)')
+abline(h=coef(ml.hare)[names(coef(ml.hare))=='intercept'])
