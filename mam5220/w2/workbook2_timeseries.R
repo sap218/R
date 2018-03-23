@@ -117,26 +117,40 @@ pacf(residuals(arima(sqrt.hare, order = c(3,0,5))), main="PACF Series ARMA(3,0,5
 phi <- 0.7
 mu <- 100
 
-data(hare)
 sim <- (arima.sim(list(order=c(1,0,0), ar=phi), n=50) +mu)
+sim.40 <- sim[1:40]
 sim.10 <- tail(sim, n=10)
 
-# a)
-arima((sim[1:40]), order=c(1,0,0))
+##############################
 
+# a) 
+arima(sim.40, order=c(1,0,0))
+auto.arima(sim.40)
 
-fit <- auto.arima(sim[1:40])
-fit
-plot(forecast(fit,h=40))
-
-
-
+##############################
 
 # b)
+time.series <- ts(sim, start=c(1, 1), end=c(1, 50), frequency=12)
+time.series
+time.series <- ts(sim.40, start=c(1, 1), end=c(1, 40), frequency=12)
+time.series
+
+fit <- auto.arima(time.series)
+plot(forecast(fit, 10))
+abline(h = mean(sim))
+
+##############################
+
 # c)
+sim.10
+
+t.s <- ts(sim, start=c(1, 1), end=c(1, 50), frequency=12)
+fitc <- auto.arima(t.s)
+tten <- tail(forecast(fitc, 10), n=10)
+tten
+
+##############################
 
 # d)
-ml.hare <- arima(sqrt(hare),order=c(3,0,0))
-ml.hare
-plot(ml.hare,n.ahead=25,type='b',xlab='Year',ylab='Sqrt(hare)')
-abline(h=coef(ml.hare)[names(coef(ml.hare))=='intercept'])
+plot((fit),n.ahead=10,type='b',xlab='Year',ylab='Count')
+abline(h=coef(fit)[names(coef(fit))=='intercept'])
