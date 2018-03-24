@@ -81,6 +81,7 @@ acf(diff(log(airpass), differences = 12), main="Autocorrelation of Residuals\nSe
 
 # Exercise 3. Hares and Roots!
 data(hare)
+
 arima(hare, order=c(1,0,0))
 arima(hare, order=c(2,0,0))
 arima(hare, order=c(3,0,0))
@@ -113,44 +114,43 @@ pacf(residuals(arima(sqrt.hare, order = c(3,0,5))), main="PACF Series ARMA(3,0,5
 ##############################################################
 
 # Exercise 4. Forecasting
-# Simulate 50 values but set aside the last 10 values to compare forecasts with actual values
 phi <- 0.7
 mu <- 100
 
 sim <- (arima.sim(list(order=c(1,0,0), ar=phi), n=50) +mu)
-sim.40 <- sim[1:40]
+sim.40 <- head(sim, n=40)
 sim.10 <- tail(sim, n=10)
 
-##############################
-
 # a) 
-arima(sim.40, order=c(1,0,0))
 auto.arima(sim.40)
-
-##############################
+arima(sim.40, order=c(0,1,0), method="ML")
 
 # b)
-time.series <- ts(sim, start=c(1, 1), end=c(1, 50), frequency=12)
-time.series
-time.series <- ts(sim.40, start=c(1, 1), end=c(1, 40), frequency=12)
-time.series
+fit <- auto.arima(sim.40)
+fore <- forecast(fit, 10)
 
-fit <- auto.arima(time.series)
-plot(forecast(fit, 10))
+par(mfrow=c(1,2))
+plot(sim, ylim=c(94,108), ylab="Value", main="Plot of the simulated time series")
 abline(h = mean(sim))
-
-##############################
+plot(fore, xlab="Time", ylab="Value", main="Forecast of the simulated time series\nof ARIMA(0,1,0)", ylim=c(94,108))
+abline(h = mean(fore$mean))
 
 # c)
+sim
 sim.10
-
-t.s <- ts(sim, start=c(1, 1), end=c(1, 50), frequency=12)
-fitc <- auto.arima(t.s)
-tten <- tail(forecast(fitc, 10), n=10)
-tten
-
-##############################
+mean(sim.10)
+pred.10 <- fore$mean
+pred.10
+summary(fore)
 
 # d)
-plot((fit),n.ahead=10,type='b',xlab='Year',ylab='Count')
-abline(h=coef(fit)[names(coef(fit))=='intercept'])
+upper.bound <- as.numeric(fore$upper[,2])
+lower.bound <- as.numeric(fore$lower[,2])
+
+par(mfrow=c(1,1))
+plot(fore, xlab="Time", ylab="Value", ylim=c(94,108),
+     main="Forecast of the simulated time series of ARIMA(0,1,0)\nshowing predicted values of upper/lower 95% and actual values")
+par(new=TRUE)
+plot(sim, xlab=" ", ylab=" ", ylim=c(94,108), type="o")
+points(x=seq(41, 50), y=upper.bound, col="blue")
+points(x=seq(41, 50), y=lower.bound, col="blue")
