@@ -102,18 +102,40 @@ plot(times.vector, AT1G01120, xlab="Time", ylab="Log mRNA Levels", main="AT1G011
 plot(times.vector, AT1G59840, xlab="Time", ylab="Log mRNA Levels", main="AT1G59840")
 
 # b)
-# calculates the p-value associated with carrying out a one-way analysis of variance (ANOVA)
-# for a particular transcript using time as a factor
-
 oneway.ANOVA.func <- function(transcriptomics.data, times.vector, rowID){
   data.vector <- as.numeric(transcriptomics.data[rowID,])
   temp.aov <- aov(lm(data.vector~as.factor(times.vector)))
   p.value <- summary(temp.aov)[[1]][1,5]
+  return(p.value)
 }
 
-# use w/ for loop to calulate p-values for all 5000 genes
-# identify gene name for 6 most significant p-values
-# 2x3 plots of time profiles for these 6 genes
+p.values <- vector()
+for (p in 1:(dim(LR)[1])) {
+  p.values[p] <- oneway.ANOVA.func(LR[2:73], times.vector, p)
+}
+sorting.p.values <- sort(p.values, decreasing=FALSE, index.return=TRUE)
+sorting.p.values[["ix"]][1:6]
+
+par(mfrow=c(2,3))
+###
+g.one <- LR$X1[1438]
+gene.one <- LR[1438,2:73]
+plot(times.vector, gene.one, xlab="Time", ylab="Log mRNA Levels", main=g.one)
+g.two <- LR$X1[2146]
+gene.two <- LR[2146,2:73]
+plot(times.vector, gene.two, xlab="Time", ylab="Log mRNA Levels", main=g.two)
+g.three <- LR$X1[841]
+gene.three <- LR[841,2:73]
+plot(times.vector, gene.three, xlab="Time", ylab="Log mRNA Levels", main=g.three)
+g.four <- LR$X1[4712]
+gene.four <- LR[4712,2:73]
+plot(times.vector, gene.four, xlab="Time", ylab="Log mRNA Levels", main=g.four)
+g.five <- LR$X1[4882]
+gene.five <- LR[4882,2:73]
+plot(times.vector, gene.five, xlab="Time", ylab="Log mRNA Levels", main=g.five)
+g.six <- LR$X1[2262]
+gene.six <- LR[2262,2:73]
+plot(times.vector, gene.six, xlab="Time", ylab="Log mRNA Levels", main=g.six)
 
 # c)
 
