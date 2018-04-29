@@ -3,7 +3,6 @@
 # Samantha Pendleton - sap21
 
 library(readr)
-#require(graphics)
 
 # Question 1
 crab <- read_csv("~/git/R/R/mam5220/w3/Crab_transcriptomics.csv")
@@ -31,17 +30,14 @@ hist(log(crab[which(crab$Condition_A == 0),]$Condition_B), col=rgb(1,0,1,1/4),
      xlab="Value") # not as normal
 
 # d)
-# Comment on the form of the histograms produced in parts b) and c)
 # Compare the means and variances in the two cases and comment on the Q-Q plots - qqnorm() function
 par(mfrow=c(2,2))
 hist(log(crab[which(crab$Condition_B == 0),]$Condition_A), col=rgb(0,0,1,1/4),
-     main="Log values of the transcript counts under
-     condition A for the transcripts
-     that show a value of 0 under condition B", xlab="Value")
+     main="Log of transcript counts under condition A
+     for transcript values of 0 under condition B", xlab="Value")
 hist(log(crab[which(crab$Condition_A == 0),]$Condition_B), col=rgb(1,0,1,1/4),
-     main="Log values of the transcript counts under
-     condition B for the transcripts
-     that show a value of 0 under condition A", xlab="Value")
+     main="Log of transcript counts under condition B
+     for transcript values of 0 under condition A", xlab="Value")
 qqnorm(log(crab[which(crab$Condition_B == 0),]$Condition_A)); qqline(log(crab[which(crab$Condition_B == 0),]$Condition_A), col=2, lwd=2, lty=2)
 qqnorm(log(crab[which(crab$Condition_A == 0),]$Condition_B)); qqline(log(crab[which(crab$Condition_A == 0),]$Condition_B), col=2, lwd=2, lty=2)
 
@@ -54,21 +50,23 @@ hist(log(crab_subset$fold), col=rgb(1,0,0,1/4),
      main="Histogram of log values of the transcript fold counts under FC = log(B/A)", xlab="Value")
 
 # f)
-# use index.return=TRUE
-sort.p <- sort(crab_subset$fold, decreasing=TRUE)[1:5] # positive
-sort.n <- sort(crab_subset$fold, decreasing=FALSE)[1:5] # negative
-sorted <- vector() # values in vector
-sorted <- append(sorted, sort.p)
-sorted <- append(sorted, sort.n)
+sort.p <- sort(crab_subset$fold, decreasing=TRUE, index.return=TRUE)
+sort.p.i <- sort.p[["ix"]][1:5] # top five index
+sort.p.top <- sort.p[["x"]][1:5] # top five values
+sort.n <- sort(crab_subset$fold, decreasing=FALSE, index.return=TRUE)
+sort.n.i <- sort.n[["ix"]][1:5]
+sort.n.top <- sort.n[["x"]][1:5]
 
-sort.p.i <- sort(crab_subset$fold, decreasing=TRUE, index.return=TRUE)[1:5]
-sort.n.i <- sort(crab_subset$fold, decreasing=FALSE, index.return=TRUE)[1:5]
 sorted.i <- vector() # index in vector
 sorted.i <- append(sorted.i, sort.p.i)
 sorted.i <- append(sorted.i, sort.n.i)
+sorted.v <- vector() # index in vector
+sorted.v <- append(sorted.v, sort.p.top)
+sorted.v <- append(sorted.v, sort.n.top)
 
-fold.change <- data.frame(sorted.i, sorted)
-
+fold.change <- data.frame(sorted.i, sorted.v)
+colnames(fold.change) <- c("Transcript ID", "Fold-change")
+write.csv(fold.change, "~/git/R/R/mam5220/w3/crab_subset_fold_change.csv")
 
 ##################################################################################
 ##################################################################################
