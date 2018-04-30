@@ -138,7 +138,121 @@ gene.six <- LR[2262,2:73]
 plot(times.vector, gene.six, xlab="Time", ylab="Log mRNA Levels", main=g.six)
 
 # c)
+p.v.adj <- p.adjust(p.values, method="bonferroni")
+(sum(p.v.adj <= 0.05))/5000
+(sum(p.v.adj <= 0.025))/5000
+(sum(p.v.adj <= 0.01))/5000
+(sum(p.v.adj <= 0.005))/5000
+(sum(p.v.adj <= 0.001))/5000
+
+# d)
+p.v.fdr <- p.adjust(p.values, method="fdr")
+# i)
+(sum(p.v.fdr <= 0.01))/5000
+(sum(p.v.fdr <= 0.05))/5000
+(sum(p.v.fdr <= 0.1))/5000
+(sum(p.v.fdr <= 0.2))/5000
+(sum(p.v.fdr <= 0.25))/5000
+# ii)
+sum(p.v.fdr <= 0.6)/5000
+sum(p.v.fdr <= 0.7)/5000
+sum(p.v.fdr <= 0.8)/5000
+
+# e)
+# i)
+which(LR$X1 == "AT1G64000") # member of the WRKY transcription family of genes
+AT1G64000 <- LR[4082,2:73]
+plot(times.vector, AT1G64000, xlab="Time", ylab="Log mRNA Levels", main="AT1G64000")
+
+# ii)
+cor.func <- function(transcriptomics.data, rowID1, rowID2) {
+  out <- cor(as.numeric(transcriptomics.data[rowID1,]),as.numeric(transcriptomics.data[rowID2,]))
+  return(out)
+}
+AT1G64000 <- as.numeric(AT1G64000)
+
+common <- vector()
+for (p in 1:(dim(LR)[1])) {
+  common[p] <- cor.func(LR[2:73], 4082, p)
+}
+sorting.common <- sort(common, decreasing=TRUE, index.return=TRUE)
+sorting.common[["ix"]][2:6]
+
+par(mfrow=c(2,3)) # AT1G64000 in the top left
+plot(times.vector, AT1G64000, xlab="Time", ylab="Log mRNA Levels", main="AT1G64000")
+g.two <- LR$X1[3276]
+gene.two <- LR[3276,2:73]
+plot(times.vector, gene.two, xlab="Time", ylab="Log mRNA Levels", main=g.two)
+g.three <- LR$X1[1417]
+gene.three <- LR[1417,2:73]
+plot(times.vector, gene.three, xlab="Time", ylab="Log mRNA Levels", main=g.three)
+g.four <- LR$X1[3653]
+gene.four <- LR[3653,2:73]
+plot(times.vector, gene.four, xlab="Time", ylab="Log mRNA Levels", main=g.four)
+g.five <- LR$X1[1859]
+gene.five <- LR[1859,2:73]
+plot(times.vector, gene.five, xlab="Time", ylab="Log mRNA Levels", main=g.five)
+g.six <- LR$X1[271]
+gene.six <- LR[271,2:73]
+plot(times.vector, gene.six, xlab="Time", ylab="Log mRNA Levels", main=g.six)
+
+# iii)
+sorting.common.negative <- sort(common, decreasing=FALSE, index.return=TRUE)
+sorting.common.negative[["ix"]][1]
+
+g.negative <- LR$X1[4818]
+gene.negative <- LR[4818,2:73]
+
+par(mfrow=c(1,1))
+plot(times.vector, AT1G64000, xlab="Time", ylab="Log mRNA Levels", ylim=c(3,8), col="aquamarine4",
+     main="Time profile for the gene, AT1G64000, plotted with the strongest negative correlation gene, AT1G72850") # AT1G64000
+par(new=TRUE)
+plot(times.vector, gene.negative, xlab="Time", ylab="Log mRNA Levels", main=" ", ylim=c(3,8), col="lightpink3") # AT1G72850
+legend(3, 8, legend=c("AT1G64000", "AT1G72850"),
+       col=c("aquamarine4", "lightpink3"), pch="o", cex=0.8)
 
 ##################################################################################
 
 # Question 3
+
+# a)
+par(mfrow=c(1,2))
+which(LR$X1 == "AT1G01060")
+LHY <- LR$X1[5]
+AT1G01060 <- LR[2,2:73]
+plot(times.vector, AT1G01060, xlab="Time", ylab="Log mRNA Levels", main=LHY)
+which(LR$X1 == "AT1G22770")
+GI <- LR$X1[1806]
+AT1G22770 <- LR[1806,2:73]
+plot(times.vector, AT1G22770, xlab="Time", ylab="Log mRNA Levels", main=GI)
+
+# b)
+AT1G01060 <- as.numeric(AT1G01060)
+common.g1 <- vector()
+for (p in 1:(dim(LR)[1])) {
+  common.g1[p] <- cor.func(LR[2:73], 2, p)
+}
+sorting.common.g1 <- sort(common.g1, decreasing=TRUE, index.return=TRUE) # positive
+sorting.common.g1[["ix"]][2:6] # index
+LR$X1[(sorting.common.g1[["ix"]][2:6])] # Gene
+round((sorting.common.g1[["x"]][2:6]),2) # Value
+sorting.common.g1.neg <- sort(common.g1, decreasing=FALSE, index.return=TRUE) # negative
+sorting.common.g1.neg[["ix"]][2:6] # index
+LR$X1[(sorting.common.g1.neg[["ix"]][2:6])] # Gene
+round((sorting.common.g1.neg[["x"]][2:6]),2) # Value
+
+AT1G22770 <- as.numeric(AT1G22770)
+common.g2 <- vector()
+for (p in 1:(dim(LR)[1])) {
+  common.g2[p] <- cor.func(LR[2:73], 1806, p)
+}
+sorting.common.g2 <- sort(common.g2, decreasing=TRUE, index.return=TRUE) # positive
+sorting.common.g2[["ix"]][2:6] # index
+LR$X1[(sorting.common.g2[["ix"]][2:6])] # Gene
+round((sorting.common.g2[["x"]][2:6]),2) # Value
+sorting.common.g2.neg <- sort(common.g2, decreasing=FALSE, index.return=TRUE) # negative
+sorting.common.g2.neg[["ix"]][2:6] # index
+LR$X1[(sorting.common.g2.neg[["ix"]][2:6])] # Gene
+round((sorting.common.g2.neg[["x"]][2:6]),2) # Value
+
+# c)
