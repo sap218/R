@@ -4,6 +4,9 @@
 
 library(readr)
 
+install.packages("rootSolve")
+library(rootSolve)
+
 ##################################################################################
 
 # Part 1
@@ -255,4 +258,156 @@ sorting.common.g2.neg[["ix"]][2:6] # index
 LR$X1[(sorting.common.g2.neg[["ix"]][2:6])] # Gene
 round((sorting.common.g2.neg[["x"]][2:6]),2) # Value
 
-# c)
+# c) # gives the differences between consecutive turning points
+par(mfrow=c(1,2))
+
+which(LR$X1 == "AT1G01060")
+LHY <- LR[2,2:73]
+LHY.splinefunc <- splinefun(times.vector, LHY)
+x <- seq(0,54,by=0.1)
+y <- LHY.splinefunc(x,deriv=0) # gives spline
+z <- LHY.splinefunc(x,deriv=1) # first derivative of spline
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main="LHY spline")
+plot(x,z,type="l",xlab="Time",ylab="log2 mRNA", main="LHY spline (1st derivative)")
+
+which(LR$X1 == "AT1G22770")
+GI <- LR[1806,2:73]
+GI.splinefunc <- splinefun(times.vector, GI)
+x <- seq(0,54,by=0.1)
+y <- GI.splinefunc(x,deriv=0) # gives spline
+z <- GI.splinefunc(x,deriv=1) # first derivative of spline
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main="GI spline")
+plot(x,z,type="l",xlab="Time",ylab="log2 mRNA", main="GI spline (1st derivative)")
+
+turning.points.GI <- uniroot.all(GI.splinefunc,interval=c(0,54),deriv=1)
+diff.g <- diff(turning.points.GI) 
+
+# d)
+gene.spline <- function(transcriptomics.data, rowID) {
+  gene.splinefunc <- splinefun(times.vector, transcriptomics.data[rowID,])
+  turning.points <- uniroot.all(gene.splinefunc, interval=c(0,54), deriv=1)
+  out <- c(mean(diff(turning.points)), sd(diff(turning.points)))
+  return(out)
+}
+
+g.matrix <- matrix(0, nrow=5000, ncol=2) 
+for (g in 1:(dim(LR)[1])) {
+  temp <- gene.spline(LR[2:73], g)
+  g.matrix[g,1] <- temp[1]
+  g.matrix[g,2] <- temp[2]
+}
+
+means <- vector()
+for (m in 1:(dim(g.matrix)[1])) {
+  means[m] <- mean(g.matrix[m,])
+}
+s.d <- vector()
+for (d in 1:(dim(g.matrix)[1])) {
+  s.d[d] <- sd(g.matrix[d,])
+}
+
+genes <- LR[which(means < 13 & means > 11 & s.d <= 3),]$X1
+
+# e)
+par(mfrow=c(4,5))
+x <- seq(0,54,by=0.1)
+
+gene <- LR[(which(LR$X1 == genes[1])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[1])
+
+gene <- LR[(which(LR$X1 == genes[2])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[2])
+
+gene <- LR[(which(LR$X1 == genes[3])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[3])
+
+gene <- LR[(which(LR$X1 == genes[4])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[4])
+
+gene <- LR[(which(LR$X1 == genes[5])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[5])
+
+gene <- LR[(which(LR$X1 == genes[6])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[6])
+
+gene <- LR[(which(LR$X1 == genes[7])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[7])
+
+gene <- LR[(which(LR$X1 == genes[8])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[8])
+
+gene <- LR[(which(LR$X1 == genes[9])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[9])
+
+gene <- LR[(which(LR$X1 == genes[10])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[10])
+
+gene <- LR[(which(LR$X1 == genes[11])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[11])
+
+gene <- LR[(which(LR$X1 == genes[12])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[12])
+
+gene <- LR[(which(LR$X1 == genes[13])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[13])
+
+gene <- LR[(which(LR$X1 == genes[14])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[14])
+
+gene <- LR[(which(LR$X1 == genes[15])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[15])
+
+gene <- LR[(which(LR$X1 == genes[16])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[16])
+
+gene <- LR[(which(LR$X1 == genes[17])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[17])
+
+gene <- LR[(which(LR$X1 == genes[18])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[18])
+
+gene <- LR[(which(LR$X1 == genes[19])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[19])
+
+gene <- LR[(which(LR$X1 == genes[20])),2:73]
+gene.splinefunc <- splinefun(times.vector, gene)
+y <- gene.splinefunc(x,deriv=0) 
+plot(x,y,type="l",xlab="Time",ylab="log2 mRNA", main=genes[20])
