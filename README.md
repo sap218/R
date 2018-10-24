@@ -5,6 +5,9 @@ All code in **R** statistical language
 ### numerical files
 My own work or files with no direct project
 
+* **001** first script
+* **002** followed online tutorial
+
 ### mam5120
 Statistical Techniques
 
