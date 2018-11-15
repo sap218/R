@@ -13,3 +13,6 @@ Statistical Techniques
 
 ### mam5220
 Statistical Techniques for Computational Biology
+
+### stats_fun
+PhD stats competition answers
