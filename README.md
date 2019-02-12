@@ -7,6 +7,7 @@ My own work or files with no direct project
 
 * **001** first script
 * **002** followed online tutorial
+* **003** tips/tricks via Software Carpentries (University of Birmingham 2019)
 
 ### mam5120
 Statistical Techniques
@@ -15,4 +16,4 @@ Statistical Techniques
 Statistical Techniques for Computational Biology
 
 ### stats_fun
-PhD stats competition answers
+PhD statistics competition answers
